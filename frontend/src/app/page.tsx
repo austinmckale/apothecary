@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { getAllGuides } from "@/lib/guides";
+import { getLatestGalleryPhotos } from "@/lib/gallery";
 
 const serviceHighlights = [
   { label: "Small batch greenhouse", detail: "Over 180 aroids in rotation", icon: "🌿" },
@@ -29,6 +30,7 @@ const experienceTiles = [
 
 export default async function Home() {
   const guides = getAllGuides().slice(0, 3);
+  const gallery = await getLatestGalleryPhotos(6);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-emerald-50 via-lime-50 to-white text-slate-900">
@@ -165,6 +167,43 @@ export default async function Home() {
             ))}
           </div>
         </section>
+        {gallery.length > 0 && (
+          <section className="space-y-4 rounded-3xl border border-slate-100 bg-white/80 p-8 shadow-emerald-50/50">
+            <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-500">
+                  Fresh snaps
+                </p>
+                <h2 className="text-3xl font-semibold text-slate-950">Greenhouse photo stream</h2>
+              </div>
+              <Link href="/timelapse" className="text-sm font-semibold text-emerald-600">
+                View timelapse →
+              </Link>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {gallery.map((shot) => (
+                <figure
+                  key={shot.id}
+                  className="group overflow-hidden rounded-2xl border border-slate-100 bg-slate-50"
+                >
+                  <Image
+                    src={shot.url}
+                    alt={shot.alt ?? shot.title}
+                    width={600}
+                    height={500}
+                    className="h-60 w-full object-cover transition duration-300 group-hover:scale-105"
+                  />
+                  <figcaption className="p-4">
+                    <p className="text-sm font-semibold text-slate-900">{shot.title}</p>
+                    <p className="text-xs text-slate-500">
+                      {new Date(shot.captured_at).toLocaleDateString()} · {shot.source}
+                    </p>
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          </section>
+        )}
       </main>
     </div>
   );
