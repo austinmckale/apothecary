@@ -1,78 +1,37 @@
 import Image from "next/image";
 import Link from "next/link";
 
-type Feature = {
-  title: string;
-  detail: string;
-  badge: string;
-};
+import { getAllGuides } from "@/lib/guides";
 
-type RoadmapLane = {
-  label: string;
-  items: string[];
-};
+const serviceHighlights = [
+  { label: "Small batch greenhouse", detail: "Over 180 aroids in rotation", icon: "🌿" },
+  { label: "Care concierge", detail: "Personalized watering & light plans", icon: "📋" },
+  { label: "Timelapse feed", detail: "Daily uploads from our grow benches", icon: "📷" },
+];
 
-const features: Feature[] = [
+const experienceTiles = [
   {
-    title: "Plant Inventory",
-    detail: "CRUD, tagging, and camera uploads straight to Supabase Storage.",
-    badge: "Admin PWA",
+    title: "Shop rare aroids",
+    copy: "Hand-selected Alocasias, Syngoniums, and climbers acclimated to home environments.",
+    action: "Browse inventory",
   },
   {
-    title: "AI Species ID",
-    detail: "Edge Function bridges OpenAI Vision (or OSS) to auto-fill metadata.",
-    badge: "Edge AI",
+    title: "Book a greenhouse visit",
+    copy: "See the collection in person, pick up pre-orders, and chat with Libby about propagation.",
+    action: "Plan a visit",
   },
   {
-    title: "Timelapse Feed",
-    detail: "Rolling public gallery that refreshes via cache-busted `latest.jpg`.",
-    badge: "Media",
-  },
-  {
-    title: "Merch & Stripe",
-    detail: "Product grid feeding into Stripe Checkout + optional Printful.",
-    badge: "Commerce",
+    title: "Follow the grow journal",
+    copy: "Weekly timelapse, pest reports, and seasonal recipes from our care team.",
+    action: "Read the journal",
   },
 ];
 
-const roadmap: RoadmapLane[] = [
-  {
-    label: "Now",
-    items: [
-      "Finalize Supabase schema for plants/products/guides",
-      "Ship camera-first PlantForm with optimistic updates",
-      "Prototype species identification flow",
-    ],
-  },
-  {
-    label: "Next",
-    items: [
-      "Public timelapse page with `?t=` cache busting",
-      "Guides powered by markdown + Tailwind `prose`",
-      "Stripe webhook → order timeline in admin",
-    ],
-  },
-  {
-    label: "Later",
-    items: [
-      "Printful auto-fulfillment edge function",
-      "AI-assisted care tips per growth stage",
-      "Native-like PWA packaging + push alerts",
-    ],
-  },
-];
+export default async function Home() {
+  const guides = getAllGuides().slice(0, 3);
 
-const stack = [
-  "Next.js App Router",
-  "Tailwind CSS",
-  "Supabase (Auth/Postgres/Storage)",
-  "Stripe Checkout",
-  "OpenAI / OSS Vision",
-];
-
-export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-emerald-100 via-lime-50 to-white text-slate-900">
+    <div className="min-h-screen bg-gradient-to-b from-emerald-50 via-lime-50 to-white text-slate-900">
       <header className="sticky top-0 z-30 border-b border-emerald-100/60 bg-white/70 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4 text-sm font-semibold text-slate-700 lg:px-12">
           <Link href="/" className="flex items-center gap-2 text-slate-900">
@@ -91,53 +50,33 @@ export default function Home() {
           </div>
         </div>
       </header>
+
       <main className="mx-auto flex max-w-6xl flex-col gap-16 px-6 pb-24 pt-12 lg:px-12">
-        <section className="grid gap-10 rounded-3xl border border-emerald-200 bg-white/70 p-10 shadow-2xl shadow-emerald-100/60 lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="space-y-8">
-            <p className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-1 text-sm font-semibold text-emerald-700">
-              LIBBY&apos;S AROID APOTHECARY · DIGITAL GREENHOUSE
+        <section className="grid gap-10 rounded-3xl border border-emerald-200 bg-white/80 p-10 shadow-2xl shadow-emerald-100/40 lg:grid-cols-[1.2fr_0.8fr]">
+          <div className="space-y-6">
+            <p className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-1 text-xs font-semibold tracking-[0.3em] text-emerald-700">
+              LANCASTER · SMALL-BATCH AROID STUDIO
             </p>
             <h1 className="text-4xl font-semibold leading-tight text-slate-950 sm:text-5xl">
-              Manage every plant, sale, and story from one PWA-ready dashboard.
+              Living sculptures, curated care, and a timelapse window into Libby&apos;s greenhouse.
             </h1>
             <p className="text-lg text-slate-600">
-              This repo pairs a Next.js frontend with Supabase services, AI species
-              identification, Stripe commerce flows, and a cozy public garden experience.
-              The hero tasks below are the fastest path to a demo-ready release.
+              We grow and ship collector-grade Alocasias, Syngoniums, and climbers—plus the care plans,
+              workshops, and digital tools that keep them thriving in your space.
             </p>
-            <div className="flex flex-wrap gap-3 text-sm font-semibold">
-              <a
-                className="rounded-full bg-emerald-600 px-5 py-2 text-white shadow-lg shadow-emerald-600/30 transition hover:bg-emerald-500"
-                href="https://supabase.com/"
-                target="_blank"
-                rel="noreferrer"
+            <div className="flex flex-wrap gap-4 text-sm font-semibold">
+              <Link
+                className="rounded-full bg-emerald-600 px-5 py-2 text-white shadow-lg shadow-emerald-600/20 transition hover:bg-emerald-500"
+                href="/guides"
               >
-                Connect Supabase
-              </a>
-              <a
+                Explore care guides
+              </Link>
+              <Link
                 className="rounded-full border border-slate-200 px-5 py-2 text-slate-700 hover:border-emerald-300 hover:text-emerald-700"
-                href="https://nextjs.org"
-                target="_blank"
-                rel="noreferrer"
+                href="/admin/plants"
               >
-                Next.js Docs
-              </a>
-            </div>
-            <div className="rounded-2xl border border-emerald-100 bg-slate-950/95 p-6 text-white shadow-xl shadow-emerald-200/20">
-              <p className="text-sm uppercase tracking-[0.2em] text-emerald-300">
-                Launch Checklist
-              </p>
-              <ul className="mt-6 space-y-4 text-sm text-emerald-50">
-                <li>✅ Create Next.js + Tailwind shell (done)</li>
-                <li>⬜ Plant schema + seed data</li>
-                <li>⬜ Mobile admin PWA shell</li>
-                <li>⬜ Supabase Storage uploads from device camera</li>
-                <li>⬜ Stripe SKU sync + checkout</li>
-                <li>⬜ Timelapse ingestion + viewer</li>
-              </ul>
-              <p className="mt-6 text-xs text-emerald-200">
-                Mirror these milestones in GitHub Projects / Linear to keep momentum visible.
-              </p>
+                View inventory beta
+              </Link>
             </div>
           </div>
           <div className="relative overflow-hidden rounded-3xl border border-emerald-100 bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 p-8 text-white shadow-emerald-900/40">
@@ -155,96 +94,74 @@ export default function Home() {
                 />
               </div>
               <p className="text-lg text-emerald-100">
-                Crafted for the curator, the caretaker, and the community that follows every
-                new unfurling leaf.
+                Shop visits · Care concierge · Remote monitoring · Stripe-powered drops
               </p>
               <div className="flex flex-wrap justify-center gap-3 text-xs uppercase tracking-[0.3em] text-emerald-200">
-                <span className="rounded-full border border-white/10 px-4 py-2">
-                  PWA READY
-                </span>
-                <span className="rounded-full border border-white/10 px-4 py-2">
-                  SUPABASE
-                </span>
-                <span className="rounded-full border border-white/10 px-4 py-2">
-                  STRIPE
-                </span>
+                <span className="rounded-full border border-white/10 px-4 py-2">TIMELAPSE</span>
+                <span className="rounded-full border border-white/10 px-4 py-2">SUPABASE</span>
+                <span className="rounded-full border border-white/10 px-4 py-2">AI CARE</span>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-3xl font-semibold text-slate-950">Core Systems</h2>
-            <span className="text-sm uppercase tracking-[0.3em] text-slate-400">
-              Phase 1
-            </span>
-          </div>
-          <div className="grid gap-6 md:grid-cols-2">
-            {features.map((feature) => (
-              <article
-                key={feature.title}
-                className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white/80 p-6 shadow-lg shadow-emerald-50"
-              >
-                <span className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-500">
-                  {feature.badge}
-                </span>
-                <h3 className="text-2xl font-semibold text-slate-900">{feature.title}</h3>
-                <p className="text-slate-600">{feature.detail}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="space-y-4 rounded-3xl border border-slate-200 bg-slate-950/90 p-10 text-slate-100 shadow-emerald-100/20">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div>
-              <p className="text-sm font-semibold text-emerald-300">Stack</p>
-              <h2 className="text-3xl font-semibold text-white">Tech Garden</h2>
+        <section className="grid gap-4 rounded-3xl border border-slate-100 bg-white/90 p-8 shadow-emerald-50/70 md:grid-cols-3">
+          {serviceHighlights.map((item) => (
+            <div key={item.label} className="flex flex-col gap-2">
+              <span className="text-2xl">{item.icon}</span>
+              <p className="text-sm font-semibold text-slate-500 uppercase tracking-[0.3em]">
+                {item.label}
+              </p>
+              <p className="text-lg font-semibold text-slate-900">{item.detail}</p>
             </div>
-            <p className="text-slate-400">
-              Ship confidently with typed APIs, end-to-end auth, and infra-as-code.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            {stack.map((item) => (
-              <span
-                key={item}
-                className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm"
-              >
-                {item}
-              </span>
-            ))}
-          </div>
+          ))}
         </section>
 
         <section className="space-y-8">
           <div className="flex flex-col gap-2">
             <p className="text-sm font-semibold uppercase tracking-[0.3em] text-emerald-500">
-              Delivery Map
+              Experiences
             </p>
-            <h2 className="text-3xl font-semibold text-slate-950">
-              Roadmap snapshots to keep everyone aligned
-            </h2>
+            <h2 className="text-3xl font-semibold text-slate-950">Choose your greenhouse adventure</h2>
           </div>
           <div className="grid gap-6 lg:grid-cols-3">
-            {roadmap.map((lane) => (
+            {experienceTiles.map((tile) => (
               <article
-                key={lane.label}
-                className="rounded-2xl border border-slate-200 bg-white/80 p-6 shadow-lg shadow-emerald-50"
+                key={tile.title}
+                className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white/80 p-6 shadow-sm shadow-emerald-50"
               >
-                <h3 className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-400">
-                  {lane.label}
-                </h3>
-                <ul className="mt-4 space-y-3 text-sm text-slate-600">
-                  {lane.items.map((item) => (
-                    <li className="flex items-start gap-2" key={item}>
-                      <span className="mt-1 h-2 w-2 rounded-full bg-emerald-500" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
+                <h3 className="text-2xl font-semibold text-slate-900">{tile.title}</h3>
+                <p className="text-sm text-slate-600">{tile.copy}</p>
+                <span className="text-sm font-semibold text-emerald-600">{tile.action} →</span>
               </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="space-y-6 rounded-3xl border border-slate-200 bg-slate-950/90 p-10 text-slate-100 shadow-emerald-100/20">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p className="text-sm font-semibold text-emerald-300">Care resources</p>
+              <h2 className="text-3xl font-semibold text-white">Latest guides from Libby&apos;s journal</h2>
+            </div>
+            <Link
+              href="/guides"
+              className="rounded-full border border-white/20 px-4 py-1.5 text-sm font-semibold text-white hover:border-emerald-200 hover:text-emerald-200"
+            >
+              View all guides
+            </Link>
+          </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            {guides.map((guide) => (
+              <Link
+                key={guide.slug}
+                href={`/guides/${guide.slug}`}
+                className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 text-white transition hover:border-emerald-200 hover:bg-white/10"
+              >
+                <p className="text-xs uppercase tracking-[0.3em] text-emerald-200">{guide.date.slice(0, 10)}</p>
+                <h3 className="text-lg font-semibold">{guide.title}</h3>
+                <p className="text-sm text-white/70">{guide.excerpt}</p>
+              </Link>
             ))}
           </div>
         </section>
@@ -252,3 +169,4 @@ export default function Home() {
     </div>
   );
 }
+
