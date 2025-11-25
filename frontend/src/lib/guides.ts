@@ -64,11 +64,6 @@ export async function getGuideData(slug: string): Promise<Guide | null> {
   const guide = getGuideBySlug(slug);
   if (!guide) return null;
 
-  if (typeof guide.content !== 'string') {
-    console.error(`Guide content is not string for ${slug}:`, guide.content);
-    guide.content = '';
-  }
-
   const processedContent = await remark()
     .use(html)
     .process(guide.content);
@@ -91,12 +86,14 @@ export function getAllGuides(): Guide[] {
     .map(slug => {
       const guide = getGuideBySlug(slug);
       if (!guide) return null;
+      const content = guide.content || '';
+      const excerpt = content.slice(0, 150).replace(/[#*_]/g, '') + '...';
       return {
         slug: guide.slug,
         title: guide.title,
         date: guide.date,
         contentHtml: '', // Not needed for list
-        excerpt: (guide.content || '').slice(0, 150).replace(/[#*_]/g, '') + '...',
+        excerpt,
       };
     })
     .filter((guide) => guide !== null) as Guide[];

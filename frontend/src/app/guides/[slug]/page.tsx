@@ -2,10 +2,10 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getGuideData, getGuideSlugs } from '@/lib/guides';
 
-type Params = {
-  params: {
+type Props = {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 };
 
 export async function generateStaticParams() {
@@ -15,8 +15,9 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: Params) {
-  const guide = await getGuideData(params.slug);
+export async function generateMetadata({ params }: Props) {
+  const { slug } = await params;
+  const guide = await getGuideData(slug);
   if (!guide) return { title: 'Guide Not Found' };
   
   return {
@@ -24,8 +25,9 @@ export async function generateMetadata({ params }: Params) {
   };
 }
 
-export default async function GuidePage({ params }: Params) {
-  const guide = await getGuideData(params.slug);
+export default async function GuidePage({ params }: Props) {
+  const { slug } = await params;
+  const guide = await getGuideData(slug);
 
   if (!guide) {
     notFound();
@@ -59,4 +61,3 @@ export default async function GuidePage({ params }: Params) {
     </div>
   );
 }
-
