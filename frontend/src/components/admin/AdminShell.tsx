@@ -1,13 +1,15 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import type { ReactNode } from 'react';
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import type { ReactNode } from "react";
 
-import PwaInstallHint from '@/components/admin/PwaInstallHint';
+import { signOutAction } from "@/lib/auth/actions";
+import PwaInstallHint from "@/components/admin/PwaInstallHint";
 
 type AdminShellProps = {
   children: ReactNode;
+  userEmail: string;
 };
 
 const navItems = [
@@ -19,7 +21,7 @@ const navItems = [
   { label: 'Settings', href: '/admin/settings', icon: '⚙️' },
 ];
 
-export default function AdminShell({ children }: AdminShellProps) {
+export default function AdminShell({ children, userEmail }: AdminShellProps) {
   const pathname = usePathname();
 
   return (
@@ -64,20 +66,17 @@ export default function AdminShell({ children }: AdminShellProps) {
                 </p>
                 <h1 className="text-2xl font-semibold text-slate-950">Admin Dashboard</h1>
               </div>
-              <div className="flex gap-3 text-sm">
-                <button
-                  type="button"
-                  className="rounded-full border border-slate-200 px-4 py-1.5 font-medium text-slate-600 transition hover:border-emerald-200 hover:text-emerald-700"
-                >
-                  Sync Storage
-                </button>
-                <button
-                  type="button"
-                  className="rounded-full bg-emerald-600 px-5 py-1.5 font-semibold text-white shadow-emerald-500/30 transition hover:bg-emerald-500"
-                >
-                  Add Plant
-                </button>
-              </div>
+          <div className="flex items-center gap-3 text-sm">
+            <div className="hidden text-slate-500 md:block">{userEmail}</div>
+            <form action={signOutAction}>
+              <button
+                type="submit"
+                className="rounded-full border border-slate-200 px-4 py-1.5 font-medium text-slate-600 transition hover:border-rose-200 hover:text-rose-600"
+              >
+                Sign out
+              </button>
+            </form>
+          </div>
             </div>
           </header>
 

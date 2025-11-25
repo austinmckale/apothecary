@@ -1,11 +1,19 @@
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.46.1";
+import OpenAI from "https://esm.sh/openai@4.22.1";
 
 const BUCKET = "timelapse";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+const openaiKey = Deno.env.get("OPENAI_API_KEY") ?? "";
+const openai =
+  openaiKey.length > 0
+    ? new OpenAI({
+        apiKey: openaiKey,
+      })
+    : null;
 
 type Payload = {
   session_id?: string;
@@ -44,6 +52,28 @@ serve(async (req) => {
       return new Response("Failed to store frame", { status: 500 });
     }
 
+    let description: string | null = null;
+
+    if (openai && req.headers.get("x-generate-caption") === "true") {
+      try {
+        const result = await openai.responses.create({
+          model: "gpt-4.1-mini",
+          input: [
+            {
+              role: "user",
+              content: [
+                { type: "input_text", text: "Describe this greenhouse timelapse frame in one sentence." },
+                { type: "input_image", image_bytes: payload.image_base64 },
+              ],
+            },
+          ],
+        });
+        description = result.output?.[0]?.content?.[0]?.text ?? null;
+      } catch (captionError) {
+        console.error("OpenAI caption error", captionError);
+      }
+    }
+
     const { error: insertError } = await supabase.from("timelapse_frames").insert({
       session_id: payload.session_id ?? null,
       camera_label: payload.camera_label,
@@ -54,7 +84,7 @@ serve(async (req) => {
       humidity: payload.humidity,
       moisture: payload.moisture,
       light_lux: payload.light_lux,
-      notes: payload.notes,
+      notes: description ?? payload.notes,
     });
 
     if (insertError) {
