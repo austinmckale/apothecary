@@ -78,12 +78,17 @@ export default function Home() {
           <Link href="/" className="flex items-center gap-2 text-slate-900">
             <span>🌱 Libby&apos;s Apothecary</span>
           </Link>
-          <Link
-            href="/admin"
-            className="rounded-full bg-emerald-600 px-4 py-1.5 text-white shadow-emerald-500/30 transition hover:bg-emerald-500"
-          >
-            Open Admin Dashboard
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link href="/guides" className="text-slate-600 hover:text-emerald-700">
+              Guides
+            </Link>
+            <Link
+              href="/admin"
+              className="rounded-full bg-emerald-600 px-4 py-1.5 text-white shadow-emerald-500/30 transition hover:bg-emerald-500"
+            >
+              Open Admin Dashboard
+            </Link>
+          </div>
         </div>
       </header>
       <main className="mx-auto flex max-w-6xl flex-col gap-16 px-6 pb-24 pt-12 lg:px-12">

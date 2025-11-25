@@ -5,7 +5,7 @@ import { getSupabaseServerClient } from '@/lib/supabase/server';
 import type { Plant } from '@/types/plant';
 
 async function fetchPlants(): Promise<Plant[]> {
-  const supabase = getSupabaseServerClient();
+  const supabase = await getSupabaseServerClient();
   const { data, error } = await supabase
     .from('plants')
     .select('*')

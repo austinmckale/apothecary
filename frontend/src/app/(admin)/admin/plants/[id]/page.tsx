@@ -6,7 +6,7 @@ import { getSupabaseServerClient } from '@/lib/supabase/server';
 import type { PlantWithPhotos } from '@/types/plant';
 
 async function fetchPlant(id: string): Promise<PlantWithPhotos | null> {
-  const supabase = getSupabaseServerClient();
+  const supabase = await getSupabaseServerClient();
   const { data, error } = await supabase
     .from('plants')
     .select('*, plant_photos(*)')
