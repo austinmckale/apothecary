@@ -82,17 +82,17 @@ export async function getGuideData(slug: string): Promise<Guide | null> {
 export function getAllGuides(): Guide[] {
   const slugs = getGuideSlugs();
   const guides = slugs
-    .filter(slug => slug.endsWith('.md'))
-    .map(slug => {
+    .filter((slug) => slug.endsWith(".md"))
+    .map((slug) => {
       const guide = getGuideBySlug(slug);
       if (!guide) return null;
-      const content = guide.content || '';
-      const excerpt = content.slice(0, 150).replace(/[#*_]/g, '') + '...';
+      const content = guide.content || "";
+      const excerpt = content.slice(0, 150).replace(/[#*_]/g, "") + "...";
       return {
         slug: guide.slug,
         title: guide.title,
         date: guide.date,
-        contentHtml: '', // Not needed for list
+        contentHtml: "", // Not needed for list
         excerpt,
       };
     })
