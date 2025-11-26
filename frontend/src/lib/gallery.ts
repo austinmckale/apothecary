@@ -11,6 +11,8 @@ export type GalleryShot = {
   alt: string | null;
   captured_at: string;
   source: string;
+  plant_id?: string;
+  plant_slug?: string;
 };
 
 const buildStorageUrl = (path: string | null | undefined) => {
@@ -23,7 +25,7 @@ export const getLatestGalleryPhotos = cache(async (limit = 6): Promise<GallerySh
 
   const plantQuery = supabase
     .from("plant_photos")
-    .select("id, storage_path, alt, captured_at, plants:plants!inner(name, slug, is_public)")
+    .select("id, plant_id, storage_path, alt, captured_at, plants:plants!inner(id, name, slug, is_public)")
     .eq("plants.is_public", true)
     .order("captured_at", { ascending: false })
     .limit(limit);
@@ -59,6 +61,8 @@ export const getLatestGalleryPhotos = cache(async (limit = 6): Promise<GallerySh
       alt: photo.alt,
       captured_at: photo.captured_at ?? new Date().toISOString(),
       source: plantInfo?.name ? "Collection" : "Greenhouse",
+      plant_id: plantInfo?.id ?? undefined,
+      plant_slug: plantInfo?.slug ?? undefined,
     };
   });
 

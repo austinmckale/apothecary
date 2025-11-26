@@ -16,6 +16,7 @@ const navItems = [
   { label: "Overview", href: "/admin", icon: "📊" },
   { label: "Plants", href: "/admin/plants", icon: "🌱" },
   { label: "Orders", href: "/admin/orders", icon: "🧾" },
+  { label: "Gallery", href: "/admin/gallery", icon: "🖼️" },
   { label: "Timelapse", href: "/admin/timelapse", icon: "📷" },
   { label: "Social", href: "/admin/social", icon: "📣" },
   { label: "Guides", href: "/admin/guides", icon: "📚" },
