@@ -61,25 +61,13 @@ export async function refreshFacebookFeedAction() {
 }
 
 // Add a type for the initial state
-export type FacebookPostState = {
-  ok: boolean;
-  error?: string;
-};
-
-// Ensure the initial state matches this type
-export const facebookPostInitialState: FacebookPostState = {
-  ok: true,
-};
-
-export async function createFacebookPostAction(
-  _prevState: FacebookPostState,
-  formData: FormData,
-): Promise<FacebookPostState> {
+export async function createFacebookPostAction(formData: FormData): Promise<void> {
   const message = String(formData.get('message') ?? '').trim();
   const imageUrl = String(formData.get('image_url') ?? '').trim() || undefined;
 
   if (!message) {
-    return { ok: false, error: 'Message is required' };
+    console.error('Message is required to create Facebook post.');
+    return;
   }
 
   const functionUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/facebookPublish`;
@@ -87,7 +75,8 @@ export async function createFacebookPostAction(
     process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '';
 
   if (!functionUrl || !authKey) {
-    return { ok: false, error: 'Missing Supabase configuration' };
+    console.error('Missing Supabase configuration for facebookPublish');
+    return;
   }
 
   try {
@@ -103,7 +92,7 @@ export async function createFacebookPostAction(
     if (!response.ok) {
       const detail = await response.text();
       console.error('facebookPublish failed', detail);
-      return { ok: false, error: 'Facebook post failed.' };
+      return;
     }
 
     const payload = await response.json();
@@ -138,9 +127,8 @@ export async function createFacebookPostAction(
     }
   } catch (error) {
     console.error('createFacebookPostAction error', error);
-    return { ok: false, error: 'Unexpected error.' };
+    return;
   }
 
   revalidatePath(SOCIAL_PATH);
-  return { ok: true };
 }

@@ -2,8 +2,10 @@ import Image from "next/image";
 
 import { getTimelapseSessions } from "@/lib/timelapse-admin";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
-import { CreateSessionForm } from "@/components/admin/CreateSessionForm";
-import { ManualFrameUploadForm } from "@/components/admin/ManualFrameUploadForm";
+import {
+  createTimelapseSessionAction,
+  uploadTimelapseFrameAction,
+} from "@/lib/timelapse/actions";
 
 async function getRecentFrames() {
   const supabase = await getSupabaseServerClient();
@@ -51,12 +53,81 @@ export default async function AdminTimelapsePage() {
       <section className="grid gap-6 lg:grid-cols-2">
         <div className="rounded-3xl border border-slate-200 bg-white p-6">
           <h3 className="text-xl font-semibold text-slate-900">Start new session</h3>
-          <CreateSessionForm />
+          <form action={createTimelapseSessionAction} className="mt-4 space-y-4">
+            <div>
+              <label className="text-sm font-semibold text-slate-600">Camera label</label>
+              <input
+                name="camera_label"
+                className="mt-1 w-full rounded-2xl border border-slate-200 px-3 py-2"
+                placeholder="North bench"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-semibold text-slate-600">Interval (minutes)</label>
+              <input
+                name="interval_minutes"
+                type="number"
+                min={1}
+                defaultValue={15}
+                className="mt-1 w-full rounded-2xl border border-slate-200 px-3 py-2"
+              />
+            </div>
+            <button className="rounded-full bg-emerald-600 px-4 py-2 font-semibold text-white">Create session</button>
+          </form>
         </div>
 
         <div className="rounded-3xl border border-slate-200 bg-white p-6">
           <h3 className="text-xl font-semibold text-slate-900">Manual frame upload</h3>
-          <ManualFrameUploadForm sessions={sessions} />
+          <form action={uploadTimelapseFrameAction} className="mt-4 space-y-4">
+            <div>
+              <label className="text-sm font-semibold text-slate-600">Session</label>
+              <select name="session_id" className="mt-1 w-full rounded-2xl border border-slate-200 px-3 py-2">
+                <option value="">No session</option>
+                {sessions.map((session) => (
+                  <option key={session.id} value={session.id}>
+                    {session.camera_label ?? "Default"} · {session.interval_minutes}m
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="text-sm font-semibold text-slate-600">Captured at</label>
+              <input
+                type="datetime-local"
+                name="captured_at"
+                defaultValue={new Date().toISOString().slice(0, 16)}
+                className="mt-1 w-full rounded-2xl border border-slate-200 px-3 py-2"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-semibold text-slate-600">Photo</label>
+              <input type="file" name="photo" accept="image/*" required className="mt-1 w-full" />
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              <div>
+                <label className="text-xs text-slate-500">Temp °F</label>
+                <input name="temperature" type="number" step="0.1" className="w-full rounded-2xl border px-3 py-2" />
+              </div>
+              <div>
+                <label className="text-xs text-slate-500">Humidity %</label>
+                <input name="humidity" type="number" step="0.1" className="w-full rounded-2xl border px-3 py-2" />
+              </div>
+              <div>
+                <label className="text-xs text-slate-500">Moisture %</label>
+                <input name="moisture" type="number" step="0.1" className="w-full rounded-2xl border px-3 py-2" />
+              </div>
+            </div>
+            <div>
+              <label className="text-sm font-semibold text-slate-600">Notes</label>
+              <textarea
+                name="notes"
+                rows={2}
+                className="mt-1 w-full rounded-2xl border border-slate-200 px-3 py-2"
+                placeholder="Lights, adjustments, etc."
+              />
+            </div>
+            <button className="rounded-full bg-slate-900 px-4 py-2 font-semibold text-white">Upload frame</button>
+          </form>
         </div>
       </section>
 

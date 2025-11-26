@@ -33,8 +33,8 @@ export const getLatestGalleryPhotos = cache(async (limit = 6): Promise<GallerySh
     .select(
       "id, storage_path, media_url, media_type, facebook_posts!inner(id, message, posted_at, is_featured, status)"
     )
-    .eq("is_featured", true, { foreignTable: "facebook_posts" })
-    .order("posted_at", { ascending: false, foreignTable: "facebook_posts" })
+    .eq("facebook_posts.is_featured", true)
+    .order("facebook_posts.posted_at", { ascending: false })
     .limit(limit);
 
   const [{ data: plantData, error: plantError }, { data: facebookData, error: facebookError }] =
@@ -48,19 +48,27 @@ export const getLatestGalleryPhotos = cache(async (limit = 6): Promise<GallerySh
     console.error("Failed to fetch facebook gallery shots", facebookError);
   }
 
-  const plantShots: GalleryShot[] = (plantData ?? []).map((photo) => ({
-    id: photo.id,
-    url: buildStorageUrl(photo.storage_path) ?? "",
-    title: photo.plants?.name ?? "Libby's Apothecary",
-    alt: photo.alt,
-    captured_at: photo.captured_at ?? new Date().toISOString(),
-    source: photo.plants?.name ? "Collection" : "Greenhouse",
-  }));
+  const plantShots: GalleryShot[] = (plantData ?? []).map((photo) => {
+    const plantInfo = Array.isArray(photo.plants) ? photo.plants[0] : photo.plants;
+    const plantName = plantInfo?.name ?? "Libby's Apothecary";
+
+    return {
+      id: photo.id,
+      url: buildStorageUrl(photo.storage_path) ?? "",
+      title: plantName,
+      alt: photo.alt,
+      captured_at: photo.captured_at ?? new Date().toISOString(),
+      source: plantInfo?.name ? "Collection" : "Greenhouse",
+    };
+  });
 
   const facebookShots: GalleryShot[] = (facebookData ?? [])
-    .filter((entry) => entry.facebook_posts?.is_featured)
     .map((entry) => {
-      const post = entry.facebook_posts;
+      const postRecord = Array.isArray(entry.facebook_posts) ? entry.facebook_posts[0] : entry.facebook_posts;
+      if (!postRecord?.is_featured) {
+        return null;
+      }
+      const post = postRecord;
       const fallbackTitle = post?.message?.slice(0, 80) ?? "Facebook update";
       const storageUrl = buildStorageUrl(entry.storage_path);
       const preferredUrl = storageUrl ?? entry.media_url ?? "";
@@ -73,7 +81,8 @@ export const getLatestGalleryPhotos = cache(async (limit = 6): Promise<GallerySh
         captured_at: post?.posted_at ?? new Date().toISOString(),
         source: "Facebook",
       };
-    });
+    })
+    .filter((shot): shot is GalleryShot => Boolean(shot));
 
   return [...plantShots, ...facebookShots]
     .filter((shot) => shot.url.length > 0)

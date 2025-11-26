@@ -4,18 +4,13 @@ import { redirect } from 'next/navigation';
 
 import { getSupabaseServerClient } from '@/lib/supabase/server';
 
-export type CheckoutState = {
-  error?: string;
-};
-
-export const checkoutInitialState: CheckoutState = {};
-
-export async function createCheckoutSessionAction(_prev: CheckoutState, formData: FormData) {
+export async function createCheckoutSessionAction(formData: FormData) {
   const productId = String(formData.get('product_id') ?? '');
   const quantity = Number(formData.get('quantity') ?? 1);
 
   if (!productId) {
-    return { error: 'Missing product' };
+    console.error('Missing product for checkout session.');
+    return;
   }
 
   const supabase = await getSupabaseServerClient();
@@ -33,7 +28,8 @@ export async function createCheckoutSessionAction(_prev: CheckoutState, formData
   });
 
   if (error || !data?.url) {
-    return { error: error?.message ?? 'Unable to start checkout' };
+    console.error('Unable to start checkout', error);
+    return;
   }
 
   redirect(data.url);

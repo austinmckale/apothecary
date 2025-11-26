@@ -5,12 +5,7 @@ import { revalidatePath } from 'next/cache';
 
 import { getSupabaseServerClient } from '@/lib/supabase/server';
 
-type ActionState = {
-  error?: string;
-  message?: string;
-};
-
-export async function createTimelapseSessionAction(_prev: ActionState, formData: FormData) {
+export async function createTimelapseSessionAction(formData: FormData) {
   const supabase = await getSupabaseServerClient();
   const payload = {
     camera_label: String(formData.get('camera_label') ?? ''),
@@ -19,17 +14,18 @@ export async function createTimelapseSessionAction(_prev: ActionState, formData:
 
   const { error } = await supabase.from('timelapse_sessions').insert(payload);
   if (error) {
-    return { error: error.message };
+    console.error('createTimelapseSessionAction error', error);
+    return;
   }
 
   revalidatePath('/admin/timelapse');
-  return { message: 'Session created' };
 }
 
-export async function uploadTimelapseFrameAction(_prev: ActionState, formData: FormData) {
+export async function uploadTimelapseFrameAction(formData: FormData) {
   const file = formData.get('photo') as File | null;
   if (!file) {
-    return { error: 'Photo is required' };
+    console.error('Photo is required for timelapse frame upload.');
+    return;
   }
 
   const buffer = Buffer.from(await file.arrayBuffer());
@@ -58,11 +54,9 @@ export async function uploadTimelapseFrameAction(_prev: ActionState, formData: F
   });
 
   if (!res.ok) {
-    return { error: await res.text() };
+    console.error('uploadTimelapseFrameAction failed', await res.text());
+    return;
   }
 
   revalidatePath('/admin/timelapse');
-  return { message: 'Frame uploaded' };
 }
-
-

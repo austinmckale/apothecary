@@ -101,19 +101,3 @@ export function getAllGuides(): Guide[] {
 
   return guides.sort((a, b) => (a.title > b.title ? 1 : -1));
 }
-
-export async function getLatestTimelapseFrames(limit: number = DEFAULT_FRAME_LIMIT) {
-  const supabase = getSupabaseServerClient();
-  const { data, error } = await supabase
-    .from('timelapse_frames')
-    .select('id, storage_path, captured_at, camera_label, temperature, humidity, moisture')
-    .order('captured_at', { ascending: false })
-    .limit(limit);
-
-  if (error) {
-    console.error('Failed to fetch timelapse frames', error);
-    return [];
-  }
-
-  return data ?? [];
-}
