@@ -3,13 +3,14 @@
 import { useActionState, useEffect, useRef, useState } from 'react';
 
 import { uploadPlantPhotoAction } from '@/app/(admin)/admin/plants/actions';
+import { photoInitialState } from '@/app/(admin)/admin/plants/state';
 
 type PlantPhotoUploaderProps = {
   plantId: string;
 };
 
 export default function PlantPhotoUploader({ plantId }: PlantPhotoUploaderProps) {
-  const [state, formAction, pending] = useActionState(uploadPlantPhotoAction, { ok: false });
+  const [state, formAction, pending] = useActionState(uploadPlantPhotoAction, photoInitialState);
   const [preview, setPreview] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 

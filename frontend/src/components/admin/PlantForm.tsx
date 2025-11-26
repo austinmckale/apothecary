@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import { useActionState, useState, useRef, useEffect } from 'react';
 
-import { createPlantAction, plantFormInitialState } from '@/app/(admin)/admin/plants/actions';
+import { createPlantAction } from '@/app/(admin)/admin/plants/actions';
+import { plantFormInitialState } from '@/app/(admin)/admin/plants/state';
 import type { Plant } from '@/types/plant';
 
 type PlantFormProps = {

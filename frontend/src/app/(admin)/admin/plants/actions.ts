@@ -14,8 +14,6 @@ export type PlantFormState = {
   plantSlug?: string;
 };
 
-const emptyState: PlantFormState = { ok: false };
-
 export async function createPlantAction(
   _prevState: PlantFormState,
   formData: FormData,
@@ -118,14 +116,10 @@ export async function createPlantAction(
   }
 }
 
-export { emptyState as plantFormInitialState };
-
 type PhotoState = {
   ok: boolean;
   message?: string;
 };
-
-const photoInitialState: PhotoState = { ok: false };
 
 export async function uploadPlantPhotoAction(
   _prevState: PhotoState,
@@ -172,5 +166,3 @@ export async function uploadPlantPhotoAction(
   revalidatePath(`/admin/plants/${plantId}`);
   return { ok: true, message: 'Photo uploaded!' };
 }
-
-export { photoInitialState };
