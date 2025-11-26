@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useActionState, useState, useRef, useEffect } from 'react';
 
 import { createPlantAction, plantFormInitialState } from '@/app/(admin)/admin/plants/actions';
@@ -73,6 +74,37 @@ export default function PlantForm({ plant }: PlantFormProps) {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category, stage, rootStatus]);
+
+  const [photoPreviews, setPhotoPreviews] = useState<string[]>([]);
+  const photoInputRef = useRef<HTMLInputElement>(null);
+  const [name, setName] = useState(plant?.name ?? '');
+  const [slug, setSlug] = useState(plant?.slug ?? '');
+
+  useEffect(() => {
+    if (state.ok) {
+      setPhotoPreviews((prev) => {
+        prev.forEach((url) => URL.revokeObjectURL(url));
+        return [];
+      });
+      if (photoInputRef.current) {
+        photoInputRef.current.value = '';
+      }
+    }
+  }, [state.ok]);
+
+  useEffect(() => {
+    return () => {
+      photoPreviews.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, [photoPreviews]);
+
+  const slugify = (value: string) =>
+    value
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-');
 
   const handleEnhance = async () => {
     const descriptionEl = document.querySelector<HTMLTextAreaElement>('textarea[name="description"]');
@@ -168,8 +200,24 @@ export default function PlantForm({ plant }: PlantFormProps) {
     }
   };
 
+  const handlePhotoSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { files } = event.target;
+    if (!files || files.length === 0) {
+      setPhotoPreviews((prev) => {
+        prev.forEach((url) => URL.revokeObjectURL(url));
+        return [];
+      });
+      return;
+    }
+    const urls = Array.from(files).map((file) => URL.createObjectURL(file));
+    setPhotoPreviews((prev) => {
+      prev.forEach((url) => URL.revokeObjectURL(url));
+      return urls;
+    });
+  };
+
   return (
-    <form action={formAction} className="space-y-6">
+    <form action={formAction} className="space-y-6" encType="multipart/form-data">
       <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/60">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <h2 className="text-lg font-semibold text-slate-900">
@@ -193,7 +241,10 @@ export default function PlantForm({ plant }: PlantFormProps) {
                 <span className="animate-pulse">🔍 Analyzing...</span>
               ) : (
                 <>
-                  <span>📸 Auto-ID</span>
+                  <span>📸 AI Identify</span>
+                  <span className="hidden text-[10px] uppercase text-emerald-400 group-hover:inline">
+                    (no upload)
+                  </span>
                 </>
               )}
             </button>
@@ -214,29 +265,51 @@ export default function PlantForm({ plant }: PlantFormProps) {
           </div>
         </div>
         <p className="text-sm text-slate-500">
-          Slug will be used for public URLs. Only lowercase, numbers, and hyphens.
+          Slug is generated from the name. Current slug:{' '}
+          <span className="font-mono text-xs text-slate-700">{slug || '—'}</span>
         </p>
+        <p className="text-xs text-slate-400">
+          Photos selected below will upload when you click “Create plant”.
+        </p>
+        {state.ok && state.plantId && (
+          <div className="mt-3 rounded-2xl border border-emerald-200 bg-emerald-50/60 p-4 text-sm text-emerald-900">
+            <p className="font-semibold">Plant saved!</p>
+            <p className="text-xs text-emerald-700">You can add more photos or edit details from the plant detail page.</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <Link
+                href={`/admin/plants/${state.plantId}`}
+                className="rounded-full bg-emerald-600 px-4 py-1.5 text-xs font-semibold text-white shadow hover:bg-emerald-500"
+              >
+                Open detail view
+              </Link>
+              {state.plantSlug && (
+                <Link
+                  href={`/plants/${state.plantSlug}`}
+                  className="rounded-full border border-emerald-200 px-4 py-1.5 text-xs font-semibold text-emerald-700 hover:border-emerald-300"
+                >
+                  View public page ↗
+                </Link>
+              )}
+            </div>
+          </div>
+        )}
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           <label className="text-sm font-medium text-slate-700">
             Name
             <input
               name="name"
-              defaultValue={plant?.name}
+              value={name}
+              onChange={(e) => {
+                const nextName = e.target.value;
+                setName(nextName);
+                setSlug(slugify(nextName));
+              }}
               className="mt-1 w-full rounded-2xl border border-slate-200 px-3 py-2 text-base"
               required
             />
             {state.errors?.name && <p className="text-xs text-rose-600">{state.errors.name[0]}</p>}
           </label>
-          <label className="text-sm font-medium text-slate-700">
-            Slug
-            <input
-              name="slug"
-              defaultValue={plant?.slug}
-              className="mt-1 w-full rounded-2xl border border-slate-200 px-3 py-2 text-base lowercase"
-              required
-            />
-            {state.errors?.slug && <p className="text-xs text-rose-600">{state.errors.slug[0]}</p>}
-          </label>
+          <input type="hidden" name="slug" value={slug} />
           <label className="text-sm font-medium text-slate-700">
             Category
             <select
@@ -382,6 +455,40 @@ export default function PlantForm({ plant }: PlantFormProps) {
             rows={3}
           />
         </label>
+
+        <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50/60 p-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p className="text-sm font-semibold text-slate-800">Gallery photos</p>
+              <p className="text-xs text-slate-500">Attach reference shots. These upload when you save.</p>
+            </div>
+            <label className="flex cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-1.5 text-xs font-semibold text-slate-700 hover:border-emerald-200 hover:text-emerald-600">
+              <span>➕ Add photos</span>
+              <input
+                ref={photoInputRef}
+                type="file"
+                name="photos"
+                multiple
+                accept="image/*"
+                className="hidden"
+                onChange={handlePhotoSelection}
+              />
+            </label>
+          </div>
+          {photoPreviews.length > 0 && (
+            <div className="mt-4 grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+              {photoPreviews.map((preview) => (
+                <div key={preview} className="relative overflow-hidden rounded-xl border border-slate-200 bg-white">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={preview} alt="Selected preview" className="h-32 w-full object-cover" />
+                  <p className="absolute bottom-2 left-2 rounded-full bg-white/80 px-2 py-0.5 text-[10px] font-semibold uppercase text-slate-600">
+                    Will upload on save
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
         <div className="mt-4 flex items-center gap-6">
           <label className="flex items-center gap-2 text-sm font-medium text-slate-700">

@@ -10,6 +10,8 @@ export type PlantFormState = {
   ok: boolean;
   message?: string;
   errors?: Record<string, string[] | undefined>;
+  plantId?: string;
+  plantSlug?: string;
 };
 
 const emptyState: PlantFormState = { ok: false };
@@ -62,18 +64,58 @@ export async function createPlantAction(
 
   try {
     const supabase = getSupabaseServiceClient();
-    const { error } = await supabase.from('plants').insert(payload);
+    const { data: insertResult, error: insertError } = await supabase
+      .from('plants')
+      .insert(payload)
+      .select('id, slug')
+      .single();
 
-    if (error) {
-      throw error;
+    if (insertError || !insertResult) {
+      throw insertError ?? new Error('Plant insert failed');
     }
+
+    const plantId = insertResult.id;
+    const photos = (formData.getAll('photos') as File[]).filter(
+      (file): file is File => file instanceof File && file.size > 0,
+    );
+
+    if (photos.length) {
+      for (const file of photos) {
+        const arrayBuffer = await file.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+        const ext = file.name.split('.').pop() ?? 'jpg';
+        const uniqueSuffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+        const path = `plant-photos/${plantId}/${uniqueSuffix}.${ext}`;
+
+        const uploadResult = await supabase.storage.from('plant-photos').upload(path, buffer, {
+          contentType: file.type || 'image/jpeg',
+          cacheControl: '3600',
+        });
+
+        if (uploadResult.error) {
+          throw uploadResult.error;
+        }
+
+        const { error: photoError } = await supabase.from('plant_photos').insert({
+          plant_id: plantId,
+          storage_path: path,
+          alt: file.name,
+          is_cover: false,
+        });
+
+        if (photoError) {
+          throw photoError;
+        }
+      }
+    }
+
+    revalidatePath('/admin/plants');
+    revalidatePath(`/admin/plants/${plantId}`);
+    return { ok: true, message: 'Plant created!', plantId, plantSlug: insertResult.slug };
   } catch (error) {
     console.error('createPlantAction error', error);
     return { ok: false, message: 'Unable to create plant.' };
   }
-
-  revalidatePath('/admin/plants');
-  return { ok: true, message: 'Plant created!' };
 }
 
 export { emptyState as plantFormInitialState };
