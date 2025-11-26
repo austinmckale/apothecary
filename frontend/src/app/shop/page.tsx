@@ -13,7 +13,7 @@ type Product = {
 };
 
 async function getProducts(): Promise<Product[]> {
-  const supabase = getSupabaseServerClient();
+  const supabase = await getSupabaseServerClient();
   const { data } = await supabase
     .from("products")
     .select("id, name, description, price_cents, currency, image_url")

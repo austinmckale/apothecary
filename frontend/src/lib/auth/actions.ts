@@ -17,7 +17,7 @@ export async function signInAction(prevState: AuthState, formData: FormData): Pr
     return { error: 'Email and password required' };
   }
 
-  const supabase = getSupabaseServerClient();
+  const supabase = await getSupabaseServerClient();
   const { error } = await supabase.auth.signInWithPassword({
     email,
     password,
@@ -31,7 +31,7 @@ export async function signInAction(prevState: AuthState, formData: FormData): Pr
 }
 
 export async function signOutAction() {
-  const supabase = getSupabaseServerClient();
+  const supabase = await getSupabaseServerClient();
   await supabase.auth.signOut();
   redirect('/login');
 }

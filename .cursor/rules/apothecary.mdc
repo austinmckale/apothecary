@@ -1,0 +1,369 @@
+---
+alwaysApply: false
+---
+
+# Alivia’s Apothecary — Project AI Rules (High-End Aroid Studio)
+
+## Brand Purpose
+This repo powers **Alivia’s Apothecary**, a small-batch aroid studio and greenhouse platform.
+
+Primary focus:
+- Syngonium pups & plants
+- Alocasia corms, pups, and mature plants
+- Begonias
+- Other curated houseplants (secondary)
+
+Brand identity:
+- Modern botanical studio
+- Concierge greenhouse tech (monitoring, timelapse, live feed)
+- Editorial, calm, and confident
+- Poetic name, sophisticated execution
+
+Everything Cursor generates should feel like:
+> “A high-end aroid atelier with serious tools and gentle personality.”
+
+---
+
+## Visual & UX Style
+
+### Overall Style
+- Clean, modern, high-contrast UI
+- Velvety forest gradients; soft but rich
+- Rounded, friendly components with clear hierarchy
+- Strong focus on readability and information density (especially in admin)
+
+No:
+- Childish illustrations
+- Witchy/cottagecore UI
+- Overly decorative fonts
+
+Yes:
+- Minimalism
+- Precise layouts
+- Subtle delight: small shadows, soft glows on key CTAs
+- Dashboard clarity
+
+### Public Site
+- Large editorial hero
+- Spacious layout with breathing room
+- Cards for feature sections (small batch, care concierge, etc.)
+- Clear primary actions and simple navigation
+
+### Admin Console
+- Dashboard-style cards
+- Left sidebar navigation (Overview / Plants / Orders / Timelapse / Social / Guides / Settings)
+- Operational clarity: stats, warnings, queues
+- Consistent spacing and typography
+
+---
+
+## Typography & Colors
+
+### Typography
+- Headings: modern serif or strong sans (e.g. Playfair Display, or a clean sans you already use)
+- Body: Inter / system sans
+- Use weight and size to create hierarchy (no decorative gimmicks)
+
+### Colors (guiding palette)
+- Deep greens / charcoal for backgrounds
+- Soft mint / pale green tints for surfaces
+- Accent colors: emerald, soft gold, sky/cyan for highlights & alerts
+- Use gradients like teal→indigo for hero blocks and important panels
+
+Tone: **forest-tech** — plants + instruments.
+
+---
+
+## Product & Content Focus
+
+Cursor must always treat these as **core objects**:
+
+1. **Syngonium**
+   - Emphasize variegation, vining/climbing potential, forgiving growth
+2. **Alocasia**
+   - Emphasize corms, propagation, dramatic foliage
+3. **Begonias**
+   - Emphasize texture and pattern (“living stained glass”)
+
+Other plants = supporting cast only.
+
+Whenever generating:
+- Category listings
+- Home sections
+- Copy about “what we sell”
+
+…put Syngonium, Alocasia, Begonias front and center.
+
+---
+
+## Tech Stack Assumptions
+
+Use:
+- **Next.js** (App Router)
+- **React + TypeScript**
+- **Tailwind CSS**
+- **Supabase** (Postgres + Storage) for:
+  - plants
+  - images/gallery
+  - live stream config
+- **Markdown/MDX** for care guides in `/docs`
+
+Rules:
+- Use TypeScript types for props and data models.
+- Prefer server components or server actions for data fetching where appropriate.
+- Tailwind classes should be readable, not chaos.
+- Follow existing folder layout if present (`/app`, `/components`, etc.).
+
+---
+
+## Landing Page Requirements
+
+The landing page should present Alivia’s Apothecary as:
+
+> “Reading, PA · small-batch aroid studio with live monitoring and curated care.”
+
+Sections Cursor should assume exist / maintain:
+
+### 1. Hero Section
+- Editorial block on left: headline + paragraph
+- Feature panel on right: logo/emblem, key offerings (timelapse, live feed, events, etc.)
+- CTA buttons:
+  - Explore care guides
+  - View inventory / Shop plants
+- Tone: high-end, calm, confident. No mysticism.
+
+### 2. Studio Features Row
+3–4 cards such as:
+- Small-batch greenhouse (number of aroids in rotation)
+- Care concierge (personalized care plans)
+- 3D corm vessels / corm pots
+- Monitoring & timelapse
+
+Each card:
+- Simple icon
+- Short heading
+- 1–2 line description
+
+### 3. Greenhouse Window (Gallery + Live)
+Use a `GreenhouseWindow` component to surface:
+
+- Live feed status (live vs paused)
+- Button: `View timelapse` / `Watch live`
+- Snapshot strip / gallery preview
+
+Props:
+
+```ts
+type GreenhouseWindowProps = {
+  liveStreamEnabled: boolean;
+  liveStreamUrl?: string | null;
+  galleryImages: { src: string; alt: string }[];
+};
+Behavior:
+
+If liveStreamEnabled && liveStreamUrl → embed iframe in a card.
+
+Else → show “Camera feed paused” / next steps note.
+
+Always render a gallery preview grid (3–4 recent frames).
+
+4. Featured Plants / Inventory Teaser
+A grid of ProductCards prioritizing:
+
+Syngonium
+
+Alocasia (especially pups/corms)
+
+Begonias
+
+Each ProductCard should show:
+
+Plant name
+
+Category (Syngonium / Alocasia / Begonia / Other)
+
+Stage (pup, corm, juvenile, mature)
+
+Root status (rooted / lightly rooted / unrooted)
+
+Price
+
+Badges (“New this week”, “Chunky corm”, “Variegated”)
+
+5. Guides Preview
+Pull from /docs and show 3–5 key care guides:
+
+Light & PPFD guide
+
+Soil / substrate science
+
+Watering guide
+
+Temperature & humidity
+
+Pests & diseases
+
+Each card:
+
+Title
+
+Short excerpt
+
+Read guide CTA
+
+6. About Studio
+Concise “about” block:
+
+Who runs the studio
+
+What “small-batch” means
+
+Emphasis on ethical propagation, data-informed care, and live monitoring.
+
+Admin Dashboard Expectations
+When Cursor generates or modifies admin UI, keep it consistent with:
+
+Left-side navigation with sections like:
+
+Overview
+
+Plants
+
+Orders
+
+Timelapse
+
+Social
+
+Guides
+
+Settings
+
+Overview dashboard:
+
+Top “Preview site / View public site” banner
+
+Stats cards (plants catalogued, active products, open orders, timelapse frames)
+
+“Garden operations” area with:
+
+Capture queue (plants needing photos)
+
+AI assists (species suggestions ready, etc.)
+
+Side rail alerts:
+
+Camera feed paused
+
+Low humidity warnings
+
+Next steps checklist
+
+New cards/sections should match this style:
+
+Concise headings
+
+One sentence of context
+
+Clear primary action
+
+Tone: operational, calm, informative.
+
+Data Model (Conceptual)
+Cursor should assume roughly:
+
+plants
+id
+
+name
+
+slug
+
+category: 'syngonium' | 'alocasia' | 'begonia' | 'other'
+
+stage: 'corm' | 'pup' | 'juvenile' | 'mature'
+
+root_status: 'unrooted' | 'lightly_rooted' | 'rooted'
+
+price
+
+in_stock (boolean)
+
+quantity
+
+thumbnail_url
+
+image_urls (string[])
+
+tags (string[])
+
+short_description
+
+long_description
+
+highlighted (boolean)
+
+gallery
+id
+
+image_url
+
+alt_text
+
+category (e.g. 'syngonium', 'alocasia', 'begonia', 'cabinet', 'timelapse')
+
+is_featured (boolean)
+
+live_config
+live_stream_enabled (boolean)
+
+live_stream_url (string | null)
+
+These don’t need to be implemented exactly like this, but Cursor should generate code that fits naturally with a Supabase/Postgres schema like this.
+
+Cursor Behavior Rules
+When generating code:
+
+Assume Next.js + TS + Tailwind + Supabase.
+
+Preserve existing layout and design patterns shown in the current project.
+
+Do not radically change the visual language; extend it.
+
+Keep copy:
+
+Calm
+
+Professional
+
+Slightly poetic
+
+Botanical and grounded (not mystical, not witchy)
+
+For landing pages:
+Use the sections listed above.
+
+Keep CTAs clear and business-relevant.
+
+For new components:
+Place them under /components.
+
+Use well-typed props.
+
+Use Tailwind consistent with existing files.
+
+For API / server logic:
+Use Next server actions or route handlers.
+
+Use Supabase client in a safe, typed way.
+
+If there’s ever ambiguity, favor:
+
+High-end aroid studio aesthetics
+
+Operational clarity
+
+Plant- and data-centric design
+over anything mystical or heavily themed.
+
+End of Rules.

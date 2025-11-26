@@ -1,30 +1,48 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 const mockAlerts = [
   {
-    title: 'Camera feed paused',
-    detail: 'Timelapse camera has not uploaded in 4 hours. Check power + Wi-Fi.',
-    actionLabel: 'View timelapse',
-    href: '/admin/timelapse',
+    title: "Camera feed paused",
+    detail: "Timelapse camera has not uploaded in 4 hours. Check power + Wi-Fi.",
+    actionLabel: "View timelapse",
+    href: "/admin/timelapse",
   },
   {
-    title: 'Low humidity warning',
-    detail: 'Propagation tent dipped below 60% for 2 hours.',
-    actionLabel: 'Open climate log',
-    href: '/admin/settings',
+    title: "Low humidity warning",
+    detail: "Propagation tent dipped below 60% for 2 hours.",
+    actionLabel: "Open climate log",
+    href: "/admin/settings",
   },
 ];
 
 const quickStats = [
-  { label: 'Plants catalogued', value: '128', delta: '+6 this week' },
-  { label: 'Active products', value: '24', delta: 'Stripe synced' },
-  { label: 'Open orders', value: '5', delta: '2 waiting for pickup' },
-  { label: 'Timelapse frames', value: '1,482', delta: '+24 today' },
+  { label: "Plants catalogued", value: "128", delta: "+6 this week" },
+  { label: "Active products", value: "24", delta: "Stripe synced" },
+  { label: "Open orders", value: "5", delta: "2 waiting for pickup" },
+  { label: "Timelapse frames", value: "1,482", delta: "+24 today" },
 ];
 
 export default function AdminDashboardPage() {
   return (
     <div className="space-y-8">
+      <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <p className="text-xs uppercase tracking-[0.4em] text-emerald-500">Preview site</p>
+            <h1 className="text-2xl font-semibold text-slate-950">Public storefront quick link</h1>
+            <p className="text-sm text-slate-500">
+              Jump out to the public site to verify new photos, timelapse frames, or shop updates.
+            </p>
+          </div>
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-slate-900/30 transition hover:bg-slate-800"
+          >
+            View public site
+            <span aria-hidden="true">↗</span>
+          </Link>
+        </div>
+      </section>
       <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {quickStats.map((stat) => (
           <div

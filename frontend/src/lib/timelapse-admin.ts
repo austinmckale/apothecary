@@ -14,7 +14,7 @@ export type TimelapseSession = {
 };
 
 export const getTimelapseSessions = cache(async (): Promise<TimelapseSession[]> => {
-  const supabase = getSupabaseServerClient();
+  const supabase = await getSupabaseServerClient();
   const { data, error } = await supabase
     .from("timelapse_sessions")
     .select("*")

@@ -11,7 +11,7 @@ type ActionState = {
 };
 
 export async function createTimelapseSessionAction(_prev: ActionState, formData: FormData) {
-  const supabase = getSupabaseServerClient();
+  const supabase = await getSupabaseServerClient();
   const payload = {
     camera_label: String(formData.get('camera_label') ?? ''),
     interval_minutes: Number(formData.get('interval_minutes') ?? 15),

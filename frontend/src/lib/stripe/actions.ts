@@ -16,7 +16,7 @@ export async function createCheckoutSessionAction(_prev: CheckoutState, formData
     return { error: 'Missing product' };
   }
 
-  const supabase = getSupabaseServerClient();
+  const supabase = await getSupabaseServerClient();
   const successUrl =
     process.env.NEXT_PUBLIC_SITE_URL?.concat('/shop/success') ?? 'http://localhost:3000/shop/success';
   const cancelUrl =

@@ -8,7 +8,7 @@ import {
 } from "@/lib/timelapse/actions";
 
 async function getRecentFrames() {
-  const supabase = getSupabaseServerClient();
+  const supabase = await getSupabaseServerClient();
   const { data } = await supabase
     .from("timelapse_frames")
     .select("id, captured_at, storage_path, camera_label, temperature, humidity")

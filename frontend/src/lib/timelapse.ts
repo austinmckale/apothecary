@@ -19,7 +19,7 @@ export type TimelapseFrame = {
 const DEFAULT_FRAME_LIMIT = 48;
 
 export const getLatestTimelapseFrames = cache(async (limit: number = DEFAULT_FRAME_LIMIT) => {
-  const supabase = getSupabaseServerClient();
+  const supabase = await getSupabaseServerClient();
   const { data, error } = await supabase
     .from("timelapse_frames")
     .select(
