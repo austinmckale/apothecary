@@ -13,6 +13,7 @@ export type GalleryShot = {
   source: string;
   plant_id?: string;
   plant_slug?: string;
+  has_plant: boolean;
 };
 
 const buildStorageUrl = (path: string | null | undefined) => {
@@ -63,6 +64,7 @@ export const getLatestGalleryPhotos = cache(async (limit = 6): Promise<GallerySh
       source: plantInfo?.name ? "Collection" : "Greenhouse",
       plant_id: plantInfo?.id ?? undefined,
       plant_slug: plantInfo?.slug ?? undefined,
+      has_plant: Boolean(plantInfo?.id),
     };
   });
 
@@ -84,6 +86,7 @@ export const getLatestGalleryPhotos = cache(async (limit = 6): Promise<GallerySh
         alt: post?.message ?? null,
         captured_at: post?.posted_at ?? new Date().toISOString(),
         source: "Facebook",
+        has_plant: false,
       };
     })
     .filter((shot): shot is GalleryShot => Boolean(shot));
