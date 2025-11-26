@@ -31,10 +31,10 @@ export const getLatestGalleryPhotos = cache(async (limit = 6): Promise<GallerySh
   const facebookQuery = supabase
     .from("facebook_media")
     .select(
-      "id, storage_path, media_url, media_type, facebook_posts:facebook_post_uuid(id, message, posted_at, is_featured, status)"
+      "id, storage_path, media_url, media_type, facebook_posts!inner(id, message, posted_at, is_featured, status)"
     )
-    .eq("facebook_posts.is_featured", true)
-    .order("facebook_posts.posted_at", { ascending: false })
+    .eq("is_featured", true, { foreignTable: "facebook_posts" })
+    .order("posted_at", { ascending: false, foreignTable: "facebook_posts" })
     .limit(limit);
 
   const [{ data: plantData, error: plantError }, { data: facebookData, error: facebookError }] =

@@ -2,8 +2,14 @@ export type Plant = {
   id: string;
   name: string;
   slug: string;
+  category: 'syngonium' | 'alocasia' | 'begonia' | 'other' | null;
   species: string | null;
   cultivar: string | null;
+  stage: 'corm' | 'pup' | 'juvenile' | 'mature' | null;
+  root_status: 'unrooted' | 'lightly_rooted' | 'rooted' | null;
+  price_cents: number | null;
+  in_stock: boolean;
+  quantity: number;
   light_requirements: string | null;
   water_schedule: string | null;
   temperature_range: string | null;
@@ -30,5 +36,3 @@ export type PlantPhoto = {
 export type PlantWithPhotos = Plant & {
   plant_photos?: PlantPhoto[];
 };
-
-

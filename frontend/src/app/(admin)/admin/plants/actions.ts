@@ -18,11 +18,17 @@ export async function createPlantAction(
   _prevState: PlantFormState,
   formData: FormData,
 ): Promise<PlantFormState> {
-  const parsed = plantSchema.safeParse({
+  const rawData = {
     name: formData.get('name'),
     slug: (formData.get('slug') as string | null)?.toLowerCase().trim(),
+    category: formData.get('category'),
     species: formData.get('species'),
     cultivar: formData.get('cultivar'),
+    stage: formData.get('stage'),
+    root_status: formData.get('root_status'),
+    price_cents: formData.get('price_cents') ? Number(formData.get('price_cents')) : null,
+    in_stock: formData.get('in_stock') === 'true',
+    quantity: Number(formData.get('quantity') ?? 0),
     light_requirements: formData.get('light_requirements'),
     water_schedule: formData.get('water_schedule'),
     temperature_range: formData.get('temperature_range'),
@@ -30,7 +36,9 @@ export async function createPlantAction(
     description: formData.get('description'),
     care_notes: formData.get('care_notes'),
     is_public: formData.get('is_public') === 'true',
-  });
+  };
+
+  const parsed = plantSchema.safeParse(rawData);
 
   if (!parsed.success) {
     return { ok: false, errors: parsed.error.flatten().fieldErrors };
@@ -38,8 +46,12 @@ export async function createPlantAction(
 
   const payload = {
     ...parsed.data,
+    category: parsed.data.category || null,
     species: parsed.data.species || null,
     cultivar: parsed.data.cultivar || null,
+    stage: parsed.data.stage || null,
+    root_status: parsed.data.root_status || null,
+    price_cents: parsed.data.price_cents || null,
     light_requirements: parsed.data.light_requirements || null,
     water_schedule: parsed.data.water_schedule || null,
     temperature_range: parsed.data.temperature_range || null,
@@ -120,6 +132,3 @@ export async function uploadPlantPhotoAction(
 }
 
 export { photoInitialState };
-
-
-

@@ -17,8 +17,14 @@ create table if not exists public.plants (
   updated_at timestamptz not null default now(),
   name text not null,
   slug text unique not null,
+  category text, -- 'syngonium' | 'alocasia' | 'begonia' | 'other'
   species text,
   cultivar text,
+  stage text, -- 'corm' | 'pup' | 'juvenile' | 'mature'
+  root_status text, -- 'unrooted' | 'lightly_rooted' | 'rooted'
+  price_cents integer,
+  in_stock boolean not null default false,
+  quantity integer not null default 0,
   light_requirements text,
   water_schedule text,
   temperature_range text,
@@ -190,5 +196,3 @@ on public.timelapse_frames
 for all
 using (auth.role() = 'service_role')
 with check (auth.role() = 'service_role');
-
-
