@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useState, useRef } from 'react';
+import { useActionState, useState, useRef, useEffect } from 'react';
 
 import { createPlantAction, plantFormInitialState } from '@/app/(admin)/admin/plants/actions';
 import type { Plant } from '@/types/plant';
@@ -14,6 +14,65 @@ export default function PlantForm({ plant }: PlantFormProps) {
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [isIdentifying, setIsIdentifying] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // State for controlled inputs (only for care requirements to enable auto-fill)
+  const [light, setLight] = useState(plant?.light_requirements ?? '');
+  const [water, setWater] = useState(plant?.water_schedule ?? '');
+  const [temp, setTemp] = useState(plant?.temperature_range ?? '');
+  const [humidity, setHumidity] = useState(plant?.humidity_range ?? '');
+  
+  // State for triggers
+  const [category, setCategory] = useState(plant?.category ?? '');
+  const [stage, setStage] = useState(plant?.stage ?? '');
+  const [rootStatus, setRootStatus] = useState(plant?.root_status ?? '');
+
+  useEffect(() => {
+    // Only auto-populate if we are creating a new plant OR if fields are empty/default
+    // For now, we'll auto-populate if the user changes these fields.
+    if (!category && !stage && !rootStatus) return;
+
+    let newLight = light;
+    let newWater = water;
+    let newTemp = temp;
+    let newHumidity = humidity;
+
+    // Defaults based on Category
+    if (category === 'alocasia') {
+      newLight = 'Bright indirect (200-400 FC)';
+      newWater = 'Allow top 1" to dry';
+      newHumidity = '60-80%';
+      newTemp = '65-80°F';
+    } else if (category === 'syngonium') {
+      newLight = 'Bright indirect to medium';
+      newWater = 'Allow top 2" to dry';
+      newHumidity = '50-70%';
+      newTemp = '60-80°F';
+    } else if (category === 'begonia') {
+      newLight = 'Medium indirect';
+      newWater = 'Keep evenly moist';
+      newHumidity = '60-80%';
+      newTemp = '65-75°F';
+    }
+
+    // Overrides based on Stage/Root Status
+    if (stage === 'corm' || rootStatus === 'unrooted') {
+      newHumidity = '90-100% (Prop box)';
+      newWater = 'Keep medium damp';
+      newTemp = '75-85°F (Heat mat)';
+      // Light for corms/props usually standard bright indirect
+    } else if (stage === 'pup' || rootStatus === 'lightly_rooted') {
+      newHumidity = '70-90%';
+      newWater = 'Keep evenly moist';
+    }
+
+    // Only update if we have a calculated value and it's different
+    if (newLight !== light) setLight(newLight);
+    if (newWater !== water) setWater(newWater);
+    if (newTemp !== temp) setTemp(newTemp);
+    if (newHumidity !== humidity) setHumidity(newHumidity);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [category, stage, rootStatus]);
 
   const handleEnhance = async () => {
     const descriptionEl = document.querySelector<HTMLTextAreaElement>('textarea[name="description"]');
@@ -78,7 +137,6 @@ export default function PlantForm({ plant }: PlantFormProps) {
       const nameEl = document.querySelector<HTMLInputElement>('input[name="name"]');
       const speciesEl = document.querySelector<HTMLInputElement>('input[name="species"]');
       const cultivarEl = document.querySelector<HTMLInputElement>('input[name="cultivar"]');
-      const categoryEl = document.querySelector<HTMLSelectElement>('select[name="category"]');
       
       if (data.species && speciesEl) speciesEl.value = data.species;
       if (data.cultivar && cultivarEl) cultivarEl.value = data.cultivar;
@@ -87,12 +145,12 @@ export default function PlantForm({ plant }: PlantFormProps) {
         nameEl.value = `${data.genus} ${data.species || ''} ${data.cultivar || ''}`.trim();
       }
 
-      if (data.genus && categoryEl) {
+      if (data.genus) {
         const genusLower = data.genus.toLowerCase();
         if (['syngonium', 'alocasia', 'begonia'].includes(genusLower)) {
-          categoryEl.value = genusLower;
+          setCategory(genusLower);
         } else {
-          categoryEl.value = 'other';
+          setCategory('other');
         }
       }
 
@@ -183,7 +241,8 @@ export default function PlantForm({ plant }: PlantFormProps) {
             Category
             <select
               name="category"
-              defaultValue={plant?.category ?? ''}
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
               className="mt-1 w-full rounded-2xl border border-slate-200 px-3 py-2 text-base"
             >
               <option value="">Select category</option>
@@ -197,7 +256,8 @@ export default function PlantForm({ plant }: PlantFormProps) {
             Stage
             <select
               name="stage"
-              defaultValue={plant?.stage ?? ''}
+              value={stage}
+              onChange={(e) => setStage(e.target.value)}
               className="mt-1 w-full rounded-2xl border border-slate-200 px-3 py-2 text-base"
             >
               <option value="">Select stage</option>
@@ -211,7 +271,8 @@ export default function PlantForm({ plant }: PlantFormProps) {
             Root Status
             <select
               name="root_status"
-              defaultValue={plant?.root_status ?? ''}
+              value={rootStatus}
+              onChange={(e) => setRootStatus(e.target.value)}
               className="mt-1 w-full rounded-2xl border border-slate-200 px-3 py-2 text-base"
             >
               <option value="">Select status</option>
@@ -260,22 +321,46 @@ export default function PlantForm({ plant }: PlantFormProps) {
         </div>
 
         <div className="mt-4 grid gap-4 md:grid-cols-2">
-          {[
-            { name: 'light_requirements' as const, label: 'Light requirements', placeholder: 'Bright indirect' },
-            { name: 'water_schedule' as const, label: 'Water schedule', placeholder: 'Weekly, allow top to dry' },
-            { name: 'temperature_range' as const, label: 'Temperature range', placeholder: '65-80°F' },
-            { name: 'humidity_range' as const, label: 'Humidity range', placeholder: '60-80%' },
-          ].map((field) => (
-            <label key={field.name} className="text-sm font-medium text-slate-700">
-              {field.label}
-              <input
-                name={field.name}
-                defaultValue={plant?.[field.name] ?? ''}
-                className="mt-1 w-full rounded-2xl border border-slate-200 px-3 py-2 text-base"
-                placeholder={field.placeholder}
-              />
-            </label>
-          ))}
+          <label className="text-sm font-medium text-slate-700">
+            Light requirements
+            <input
+              name="light_requirements"
+              value={light}
+              onChange={(e) => setLight(e.target.value)}
+              className="mt-1 w-full rounded-2xl border border-slate-200 px-3 py-2 text-base"
+              placeholder="Bright indirect"
+            />
+          </label>
+          <label className="text-sm font-medium text-slate-700">
+            Water schedule
+            <input
+              name="water_schedule"
+              value={water}
+              onChange={(e) => setWater(e.target.value)}
+              className="mt-1 w-full rounded-2xl border border-slate-200 px-3 py-2 text-base"
+              placeholder="Weekly, allow top to dry"
+            />
+          </label>
+          <label className="text-sm font-medium text-slate-700">
+            Temperature range
+            <input
+              name="temperature_range"
+              value={temp}
+              onChange={(e) => setTemp(e.target.value)}
+              className="mt-1 w-full rounded-2xl border border-slate-200 px-3 py-2 text-base"
+              placeholder="65-80°F"
+            />
+          </label>
+          <label className="text-sm font-medium text-slate-700">
+            Humidity range
+            <input
+              name="humidity_range"
+              value={humidity}
+              onChange={(e) => setHumidity(e.target.value)}
+              className="mt-1 w-full rounded-2xl border border-slate-200 px-3 py-2 text-base"
+              placeholder="60-80%"
+            />
+          </label>
         </div>
 
         <label className="mt-4 block text-sm font-medium text-slate-700">
