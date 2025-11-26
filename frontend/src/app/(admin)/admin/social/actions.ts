@@ -60,7 +60,21 @@ export async function refreshFacebookFeedAction() {
   revalidatePath(SOCIAL_PATH);
 }
 
-export async function createFacebookPostAction(formData: FormData) {
+// Add a type for the initial state
+export type FacebookPostState = {
+  ok: boolean;
+  error?: string;
+};
+
+// Ensure the initial state matches this type
+export const facebookPostInitialState: FacebookPostState = {
+  ok: true,
+};
+
+export async function createFacebookPostAction(
+  _prevState: FacebookPostState,
+  formData: FormData,
+): Promise<FacebookPostState> {
   const message = String(formData.get('message') ?? '').trim();
   const imageUrl = String(formData.get('image_url') ?? '').trim() || undefined;
 
@@ -130,4 +144,3 @@ export async function createFacebookPostAction(formData: FormData) {
   revalidatePath(SOCIAL_PATH);
   return { ok: true };
 }
-

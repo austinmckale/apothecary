@@ -4,9 +4,11 @@ import { redirect } from 'next/navigation';
 
 import { getSupabaseServerClient } from '@/lib/supabase/server';
 
-type CheckoutState = {
+export type CheckoutState = {
   error?: string;
 };
+
+export const checkoutInitialState: CheckoutState = {};
 
 export async function createCheckoutSessionAction(_prev: CheckoutState, formData: FormData) {
   const productId = String(formData.get('product_id') ?? '');
@@ -36,5 +38,3 @@ export async function createCheckoutSessionAction(_prev: CheckoutState, formData
 
   redirect(data.url);
 }
-
-

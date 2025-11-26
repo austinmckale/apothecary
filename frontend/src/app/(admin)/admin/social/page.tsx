@@ -7,6 +7,7 @@ import {
   togglePostFeaturedAction,
 } from "./actions";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
+import { FacebookPostForm } from "@/components/admin/FacebookPostForm";
 
 type SocialMedia = {
   id: string;
@@ -86,37 +87,7 @@ export default async function SocialFeedPage() {
             </form>
           </div>
 
-          <form action={createFacebookPostAction} className="grid gap-3 rounded-2xl border border-slate-100 bg-slate-50 p-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.4em] text-emerald-500">New post</p>
-            <label className="text-sm font-semibold text-slate-600">
-              Caption
-              <textarea
-                name="message"
-                rows={3}
-                placeholder="Share a greenhouse update, new drop, or timelapse moment."
-                className="mt-1 w-full rounded-2xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700"
-                required
-              />
-            </label>
-            <label className="text-sm font-semibold text-slate-600">
-              Image URL (optional)
-              <input
-                name="image_url"
-                type="url"
-                placeholder="https://your-supabase-storage/object/public/plant-photos/..."
-                className="mt-1 w-full rounded-2xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700"
-              />
-              <span className="text-xs text-slate-500">Use a Supabase public URL or any hosted image.</span>
-            </label>
-            <div className="flex justify-end">
-              <button
-                type="submit"
-                className="rounded-full bg-slate-950 px-5 py-2 text-sm font-semibold text-white shadow shadow-slate-900/30 hover:bg-slate-800"
-              >
-                Publish to Facebook
-              </button>
-            </div>
-          </form>
+          <FacebookPostForm createAction={createFacebookPostAction} />
         </div>
       </section>
 
@@ -194,4 +165,3 @@ export default async function SocialFeedPage() {
     </div>
   );
 }
-

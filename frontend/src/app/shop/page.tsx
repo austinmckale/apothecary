@@ -1,8 +1,8 @@
 import Image from "next/image";
 
-import { createCheckoutSessionAction } from "@/lib/stripe/actions";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import PublicShell from "@/components/PublicShell";
+import { ProductCard } from "@/components/shop/ProductCard";
 
 type Product = {
   id: string;
@@ -50,32 +50,7 @@ export default async function ShopPage() {
                     <div className="flex h-full items-center justify-center text-slate-400">Coming soon</div>
                   )}
                 </div>
-                <div className="mt-4 space-y-2">
-                  <h2 className="text-xl font-semibold text-slate-900">{product.name}</h2>
-                  <p className="text-sm text-slate-600">{product.description ?? "Limited release."}</p>
-                  <p className="text-lg font-semibold text-slate-900">
-                    {(product.price_cents / 100).toLocaleString("en-US", {
-                      style: "currency",
-                      currency: product.currency ?? "usd",
-                    })}
-                  </p>
-                  <form action={createCheckoutSessionAction} className="space-y-2">
-                    <input type="hidden" name="product_id" value={product.id} />
-                    <label className="text-xs text-slate-500">
-                      Quantity
-                      <input
-                        name="quantity"
-                        type="number"
-                        min={1}
-                        defaultValue={1}
-                        className="mt-1 w-full rounded-2xl border border-slate-200 px-3 py-2"
-                      />
-                    </label>
-                    <button className="w-full rounded-full bg-emerald-600 px-4 py-2 font-semibold text-white hover:bg-emerald-500">
-                      Checkout
-                    </button>
-                  </form>
-                </div>
+                <ProductCard product={product} />
               </div>
             ))}
           </div>
