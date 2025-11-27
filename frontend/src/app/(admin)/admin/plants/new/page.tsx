@@ -7,13 +7,12 @@ export const metadata = {
 };
 
 type NewPlantPageProps = {
-  searchParams?: {
-    source_photo?: string;
-  };
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
-export default function NewPlantPage({ searchParams }: NewPlantPageProps) {
-  const sourcePhoto = searchParams?.source_photo;
+export default async function NewPlantPage({ searchParams }: NewPlantPageProps) {
+  const params = await searchParams;
+  const sourcePhoto = typeof params?.source_photo === 'string' ? params.source_photo : undefined;
 
   return (
     <div className="space-y-6">

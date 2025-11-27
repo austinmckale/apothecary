@@ -82,7 +82,7 @@ export default function AdminShell({ children, userEmail }: AdminShellProps) {
             </div>
           </header>
 
-          <main className="flex-1 px-4 py-6 sm:px-6 lg:px-10">
+          <main className="flex-1 px-4 py-6 pb-28 sm:px-6 lg:px-10">
             <div className="mx-auto max-w-6xl">{children}</div>
           </main>
         </div>

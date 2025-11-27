@@ -76,28 +76,19 @@ export default function PlantForm({ plant }: PlantFormProps) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category, stage, rootStatus]);
 
-  const [photoPreviews, setPhotoPreviews] = useState<string[]>([]);
+  const [photoPreviews, setPhotoPreviews] = useState<{ url: string; name: string }[]>([]);
   const photoInputRef = useRef<HTMLInputElement>(null);
   const [name, setName] = useState(plant?.name ?? '');
   const [slug, setSlug] = useState(plant?.slug ?? '');
 
   useEffect(() => {
     if (state.ok) {
-      setPhotoPreviews((prev) => {
-        prev.forEach((url) => URL.revokeObjectURL(url));
-        return [];
-      });
+      setPhotoPreviews([]);
       if (photoInputRef.current) {
         photoInputRef.current.value = '';
       }
     }
   }, [state.ok]);
-
-  useEffect(() => {
-    return () => {
-      photoPreviews.forEach((url) => URL.revokeObjectURL(url));
-    };
-  }, [photoPreviews]);
 
   const slugify = (value: string) =>
     value
@@ -201,20 +192,29 @@ export default function PlantForm({ plant }: PlantFormProps) {
     }
   };
 
-  const handlePhotoSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoSelection = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = event.target;
     if (!files || files.length === 0) {
-      setPhotoPreviews((prev) => {
-        prev.forEach((url) => URL.revokeObjectURL(url));
-        return [];
-      });
+      setPhotoPreviews([]);
       return;
     }
-    const urls = Array.from(files).map((file) => URL.createObjectURL(file));
-    setPhotoPreviews((prev) => {
-      prev.forEach((url) => URL.revokeObjectURL(url));
-      return urls;
-    });
+    try {
+      const previews = await Promise.all(
+        Array.from(files).map(
+          (file) =>
+            new Promise<{ url: string; name: string }>((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onload = () => resolve({ url: reader.result as string, name: file.name });
+              reader.onerror = (err) => reject(err);
+              reader.readAsDataURL(file);
+            }),
+        ),
+      );
+      setPhotoPreviews(previews);
+    } catch (err) {
+      console.error('Photo preview failed', err);
+      setPhotoPreviews([]);
+    }
   };
 
   return (
@@ -374,13 +374,15 @@ export default function PlantForm({ plant }: PlantFormProps) {
             />
           </label>
           <label className="text-sm font-medium text-slate-700">
-            Price (cents)
+            Price ($ USD)
             <input
-              name="price_cents"
+              name="price_dollars"
               type="number"
-              defaultValue={plant?.price_cents ?? ''}
+              step="0.01"
+              min="0"
+              defaultValue={plant?.price_cents ? (plant.price_cents / 100).toFixed(2) : ''}
               className="mt-1 w-full rounded-2xl border border-slate-200 px-3 py-2 text-base"
-              placeholder="1500"
+              placeholder="150.00"
             />
           </label>
           <label className="text-sm font-medium text-slate-700">
@@ -479,9 +481,9 @@ export default function PlantForm({ plant }: PlantFormProps) {
           {photoPreviews.length > 0 && (
             <div className="mt-4 grid gap-3 sm:grid-cols-2 md:grid-cols-3">
               {photoPreviews.map((preview) => (
-                <div key={preview} className="relative overflow-hidden rounded-xl border border-slate-200 bg-white">
+                <div key={preview.url} className="relative overflow-hidden rounded-xl border border-slate-200 bg-white">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={preview} alt="Selected preview" className="h-32 w-full object-cover" />
+                  <img src={preview.url} alt={preview.name || 'Selected preview'} className="h-32 w-full object-cover" />
                   <p className="absolute bottom-2 left-2 rounded-full bg-white/80 px-2 py-0.5 text-[10px] font-semibold uppercase text-slate-600">
                     Will upload on save
                   </p>

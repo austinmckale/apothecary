@@ -18,6 +18,15 @@ export async function createPlantAction(
   _prevState: PlantFormState,
   formData: FormData,
 ): Promise<PlantFormState> {
+  const priceDollarsRaw = formData.get('price_dollars');
+  let priceCents: number | null = null;
+  if (typeof priceDollarsRaw === 'string' && priceDollarsRaw.trim().length > 0) {
+    const parsed = Number.parseFloat(priceDollarsRaw);
+    if (!Number.isNaN(parsed)) {
+      priceCents = Math.round(parsed * 100);
+    }
+  }
+
   const rawData = {
     name: formData.get('name'),
     slug: (formData.get('slug') as string | null)?.toLowerCase().trim(),
@@ -26,7 +35,7 @@ export async function createPlantAction(
     cultivar: formData.get('cultivar'),
     stage: formData.get('stage'),
     root_status: formData.get('root_status'),
-    price_cents: formData.get('price_cents') ? Number(formData.get('price_cents')) : null,
+    price_cents: priceCents,
     in_stock: formData.get('in_stock') === 'true',
     quantity: Number(formData.get('quantity') ?? 0),
     light_requirements: formData.get('light_requirements'),
