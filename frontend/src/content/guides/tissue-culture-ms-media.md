@@ -163,7 +163,132 @@ BAP promotes cell division and shoot formation, breaking apical dominance to enc
 
 ---
 
-## 7. Cost Summary & Recommendations
+## 7. Starter Kit vs. Individual Components — Cost Comparison
+
+### 7.1. Starter Kit Option: Plants in Jars Starter Kit
+
+**Contents (~$99.99):**
+- MS basal medium with vitamins (10 L worth)
+- Agar powder (100 g)
+- 6-BAP solution (100 mL at 1 mg/mL)
+- IBA solution (100 mL at 1 mg/mL)
+- NAA solution (100 mL at 1 mg/mL)
+- Digital protocol library access
+
+**Pros:**
+- Everything in one box — no sourcing from multiple vendors
+- Single shipping charge
+- Pre-mixed hormone solutions at correct concentrations
+- Includes beginner-friendly protocols and support
+- Ensures compatibility between components
+
+**Cons:**
+- Higher upfront cost compared to sourcing cheapest individual components
+- May include NAA (which isn't essential for most aroid cloning)
+
+### 7.2. Individual Component Cost Breakdown
+
+**Detailed pricing comparison across major suppliers:**
+
+| Component (quantity) | Amazon | Plant Cell Technology | PhytoTech Labs | Carolina Biological |
+| --- | --- | --- | --- | --- |
+| **MS Medium** (10 L, with vitamins) | ~$27 (RPI 44 g pack) | ~$12.99 (small pack) | **$9.20** (10 L pack) | $26.20 (10 × 1 L packs) |
+| **Agar** (100 g, tissue-culture grade) | ~$30 (lab-grade, various sellers) | $28.99 | $31.05 | ~$30 (educational grade) |
+| **BAP solution** (100 mL, 1 mg/mL) | Limited (~$25 specialty sellers) | $21.99 | $24.45 | N/A (kits only) |
+| **IBA solution** (100 mL, 1 mg/mL) | Limited (~$20–$25) | $19.99 | ~$23.05 | N/A (kits only) |
+| **NAA solution** (100 mL, 1 mg/mL) | Limited (~$25) | $27.99 | $23.40 | N/A (kits only) |
+
+**Cost analysis:**
+- **Cheapest individual sourcing:** ~$80–$110 total (depending on NAA inclusion)
+- **Starter kit:** $99.99
+- **Savings:** $10–$20 if sourcing individually, BUT this doesn't account for:
+  - Multiple shipping charges (often $5–$15 per vendor)
+  - Time spent sourcing from different suppliers
+  - Risk of compatibility issues
+
+**Bottom line:** For beginners, the starter kit's convenience and bundled support often justify the slightly higher cost. For experienced users planning larger operations, individual sourcing from PhytoTech (MS) and PCT (hormones) can save money, especially when buying in bulk.
+
+### 7.3. Is NAA Necessary?
+
+**Short answer:** No, NAA is not essential for most aroid cloning workflows.
+
+**When NAA is used:**
+- Some Begonia protocols use NAA alongside BAP for shoot induction
+- Alternative to IBA for rooting (though IBA is generally preferred)
+- Can be used in combination with IBA for difficult-to-root species
+
+**For Alocasias, Syngoniums, and most Begonias:**
+- **BAP** (1–3 mg/L) is sufficient for shoot multiplication
+- **IBA** (0.5 mg/L) is effective for rooting
+- NAA can be added later if you encounter rooting issues, but it's not required to start
+
+**Recommendation:** If buying individually, start with BAP and IBA only. Add NAA later if needed for specific protocols or troubleshooting.
+
+---
+
+## 8. Supplier Reliability & Accessibility
+
+### 8.1. Amazon
+
+**Pros:**
+- Fast shipping (Prime delivery available)
+- Easy ordering and buyer protection
+- Good for basics like MS medium powder and agar
+
+**Cons:**
+- Limited selection for specialized items (pure hormone solutions rare)
+- Quality control varies — check reviews and stick to known brands
+- Third-party marketplace vendors may have inconsistent quality
+
+**Best for:** Quick access to MS medium and agar when you need them fast.
+
+### 8.2. Plant Cell Technology (PCT)
+
+**Pros:**
+- Specialty company focused on plant tissue culture hobbyists
+- One-stop shop — media, agar, hormones, supplies all available
+- Quality-tested products formulated for home use
+- Pre-mixed solutions avoid handling raw powders
+- Regular sales and promotions
+- No scientific account required
+
+**Cons:**
+- Prices slightly higher than bulk suppliers for large quantities
+- Shipping times may be slower than Amazon
+
+**Best for:** Beginners and hobbyists who want everything from one reliable source.
+
+### 8.3. PhytoTech Labs
+
+**Pros:**
+- Excellent bulk pricing (MS medium as low as $9.20 for 10 L)
+- Professional-grade products
+- Good for large-scale operations
+
+**Cons:**
+- Assumes some lab knowledge (may need to mix stock solutions from powders)
+- Less beginner-friendly website and ordering process
+- May require minimum order quantities
+
+**Best for:** Experienced users buying in bulk (50 L+ packs).
+
+### 8.4. Carolina Biological
+
+**Pros:**
+- Reliable educational supplier
+- Good for institutions and educators
+- May offer local pickup options
+
+**Cons:**
+- Higher prices than specialty suppliers
+- Doesn't typically sell pure hormones individually (kits only)
+- Less focused on hobbyist market
+
+**Best for:** Educational institutions or when combining with other orders.
+
+---
+
+## 9. Cost Summary & Recommendations
 
 **For home labs on a budget:**
 
@@ -179,11 +304,75 @@ BAP promotes cell division and shoot formation, breaking apical dominance to enc
 - Hormones: ~$0.01–$0.02
 - **Total: ~$1.20–$3.20 per liter** (much cheaper than pre-mixed complete media)
 
-**Recommended starter kit:** Plant Cell Technology offers a starter kit with MS medium (10 L), agar, PPM preservative, and 30 mL each of BAP, IBA, and NAA solutions — good for getting started without buying large quantities.
+### 9.1. Recommendations by Experience Level
+
+**Beginners (first-time tissue culture):**
+- **Start with:** Plants in Jars Starter Kit (~$99.99) or PCT Starter Kit
+- **Why:** Minimizes variables, ensures correct ingredients, includes protocols
+- **Next step:** Once comfortable, refill individual components from economical sources
+
+**Intermediate (some experience):**
+- **Mix-and-match approach:** Buy MS medium + agar from PhytoTech, hormones from PCT
+- **Skip NAA initially:** Start with BAP and IBA only
+- **Total cost:** ~$80–$90 + shipping (slightly cheaper than kit)
+
+**Advanced (multiple batches planned):**
+- **Bulk buying:** 50 L MS pack (~$36), 500 g agar, BAP/IBA powders
+- **Make your own stock solutions:** More economical long-term
+- **Cost per liter:** Can drop to under $1 per liter at scale
+
+### 9.2. Mix-and-Match Strategies
+
+**Option 1: Basic essentials only**
+- MS medium (10 L) + agar (100 g) + BAP solution (100 mL) + IBA solution (100 mL)
+- Skip NAA initially — add later if needed
+- **Cost:** ~$70–$85 depending on supplier
+
+**Option 2: Hybrid approach**
+- Buy starter kit for first round, then refill individual components
+- Use kit's protocols and support, then optimize costs for subsequent batches
+
+**Option 3: Bulk for future use**
+- Buy larger quantities upfront (50 L MS, 500 g agar, hormone powders)
+- Higher initial cost but much lower per-liter cost for many batches
+- **Best for:** Serious hobbyists planning multiple cloning projects
+
+### 9.3. Reusable Equipment Considerations
+
+If you already have:
+- **Pressure cooker** (for sterilization) — saves $100+ vs. autoclave
+- **Labware** (jars, vessels, tools) — reusable, no ongoing cost
+- **Scales and measuring equipment** — one-time purchase
+
+**You're already ahead:** Focus budget on consumables (media, hormones, agar) rather than equipment.
 
 ---
 
-## 8. Safety & Sterilization Notes
+## 10. Protocols & Support
+
+**Starter kits include:**
+- Digital protocol library
+- Step-by-step guides for explant sterilization
+- Media preparation instructions
+- Subculturing techniques
+- Troubleshooting guides
+
+**If sourcing individually:**
+- Research established protocols for your target species (Begonia, Alocasia, Syngonium)
+- Many free resources available: university extension guides, forums, research papers
+- Consider investing time in reading literature or watching tutorial videos
+- Some suppliers (like PCT) offer free protocol resources on their websites
+
+**Key protocols to understand:**
+- Explant selection and sterilization
+- Media preparation and pH adjustment
+- Hormone concentration effects
+- Subculturing timing and techniques
+- Acclimatization procedures
+
+---
+
+## 11. Safety & Sterilization Notes
 
 - **All materials are lab-safe** and compatible with autoclave or microwave sterilization
 - **MS powders and agar are heat-stable** — can withstand autoclaving
@@ -193,7 +382,7 @@ BAP promotes cell division and shoot formation, breaking apical dominance to enc
 
 ---
 
-## 9. Key Takeaways
+## 12. Key Takeaways
 
 1. **Preformulated MS media with vitamins** simplifies preparation — no need for separate vitamin supplements
 2. **Bulk purchases** (10–50 L) offer the best value for home labs planning multiple experiments
@@ -209,8 +398,21 @@ By purchasing smartly (bulk where it counts, small kits for convenience) and car
 
 ## Sources & Further Reading
 
-- Plant Cell Technology — MS Basal Salts (Modification 9) and hormone products
-- PhytoTech Labs — Bulk MS media options
+### Suppliers
+- **Plant Cell Technology** — [PCT Store](https://plantcelltechnology.com/collections/pct-store) — MS Basal Salts (Modification 9), hormone solutions, starter kits
+- **PhytoTech Labs** — [MS Basal Medium](https://phytotechlab.com/murashige-skoog-basal-medium-with-vitamins.html) — Bulk MS media options, hormone solutions
+- **Plants in Jars** — [Starter Kit](https://plantsinjars.shop/products/starter-kit) — Complete tissue culture starter kit (~$99.99)
+- **Research Products International** — MS Medium with Vitamins (Amazon marketplace)
+- **Carolina Biological** — Educational supplier for MS media and agar
+
+### Research & Protocols
 - Research protocols for Begonia and Alocasia micropropagation
 - Plant Cell Technology blog — Step-by-step MS media preparation guides
+- University extension guides and tissue culture forums
+- Research papers on aroid micropropagation (Begonia rex, Alocasia baginda, Syngonium protocols)
+
+### Cost Comparison Resources
+- Detailed supplier pricing tables (see Section 7.2)
+- Bulk vs. starter kit analysis for different experience levels
+- Mix-and-match sourcing strategies for budget optimization
 
