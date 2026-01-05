@@ -25,6 +25,7 @@ export async function generateStaticParams() {
 }
 
 export const dynamicParams = true; // Allow dynamic rendering for new guides not in static params
+export const revalidate = 0; // Always revalidate to ensure latest content
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
