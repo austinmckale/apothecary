@@ -10,11 +10,21 @@ type Props = {
 };
 
 export async function generateStaticParams() {
-  const files = getGuideSlugs();
-  return files.map((file) => ({
-    slug: file.replace(/\.md$/, ''),
-  }));
+  try {
+    const files = getGuideSlugs();
+    const slugs = files
+      .filter((file) => file.endsWith('.md'))
+      .map((file) => ({
+        slug: file.replace(/\.md$/, ''),
+      }));
+    return slugs;
+  } catch (error) {
+    console.error('Error generating static params for guides:', error);
+    return [];
+  }
 }
+
+export const dynamicParams = true; // Allow dynamic rendering for new guides not in static params
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
