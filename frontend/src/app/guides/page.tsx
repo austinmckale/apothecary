@@ -7,6 +7,8 @@ export const metadata = {
   description: 'Expert care guides for Alocasias, Syngoniums, and other aroids.',
 };
 
+export const revalidate = 0; // Always fetch fresh guides list
+
 export default function GuidesIndexPage() {
   const guides = getAllGuides();
 
